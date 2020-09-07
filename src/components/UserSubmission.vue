@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 v-if="user !== ''">{{ user }} solved {{ count }} problems in last {{ days }} days</h1>
-    <SubmissionByDate :key="currentDate.date" v-for="currentDate in solveCountByDate" :count="currentDate.count" :date="currentDate.date" />
+<!--    <SubmissionByDate :key="currentDate.date" v-for="currentDate in solveCountByDate" :count="currentDate.count" :date="currentDate.date" />-->
   </div>
 </template>
 

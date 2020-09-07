@@ -1,26 +1,27 @@
 <template>
   <div id="app">
     <UserInfoForm @form-updated="updateUserSubmissionInfo"/>
-    <UserSubmission :user="cfHandle" :days="dayCounts" :solveCountByDate="solveCountByDate"/>
+    <SubmissionChart :chart-data="submissionChartData"/>
   </div>
 </template>
 
 <script>
-import UserSubmission from './components/UserSubmission.vue';
-import UserInfoForm from "./components/UserInfoForm";
 import axios from "axios";
+import UserInfoForm from "./components/UserInfoForm";
+import SubmissionChart from "./components/SubmissionChart";
 
 export default {
   name: 'App',
   components: {
-    UserSubmission,
+    SubmissionChart,
     UserInfoForm
   },
   data() {
     return {
       cfHandle: '',
       dayCounts: 0,
-      solveCountByDate: []
+      solveCountByDate: [],
+      submissionChartData: {}
     }
   },
   methods: {
@@ -32,6 +33,8 @@ export default {
 
       this.$data.cfHandle = handleId;
       this.$data.dayCounts = days;
+      const labels = [];
+      const datasets = [];
       this.$data.solveCountByDate = res.countAra.map((count, idx) => {
         const d = new Date();
         d.setDate(d.getDate() - idx);
@@ -40,7 +43,14 @@ export default {
           count, date
         }
       });
-      console.log(this.$data.dayCounts);
+
+      const dataset = {label: 'Total submission', backgroundColor: '#79bdf8', data: []};
+      this.$data.solveCountByDate.forEach(data => {
+        labels.push(data.date);
+        dataset.data.push(data.count);
+      });
+      datasets.push(dataset);
+      this.$data.submissionChartData = {labels, datasets};
     }
   }
 }
