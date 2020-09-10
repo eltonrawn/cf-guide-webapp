@@ -1,7 +1,10 @@
 <template>
-  <div id="app">
-    <UserInfoForm @form-updated="updateUserSubmissionInfo"/>
-    <SubmissionChart :chart-data="submissionChartData"/>
+  <div class="container" id="app">
+    <div class="jumbotron">
+      <UserInfoForm @form-updated="updateUserSubmissionInfo"/>
+    </div>
+    <UserSubmission :user="cfHandle" :days="dayCounts" :count="totCount" :acCount="acCount" :uniqueAcCount="uniqueAcCount"/>
+    <SubmissionChart v-if="showSubmissionChart" :chart-data="submissionChartData"/>
   </div>
 </template>
 
@@ -9,10 +12,12 @@
 import axios from "axios";
 import UserInfoForm from "./components/UserInfoForm";
 import SubmissionChart from "./components/SubmissionChart";
+import UserSubmission from "@/components/UserSubmission";
 
 export default {
   name: 'App',
   components: {
+    UserSubmission,
     SubmissionChart,
     UserInfoForm
   },
@@ -20,13 +25,18 @@ export default {
     return {
       cfHandle: '',
       dayCounts: 0,
-      solveCountByDate: [],
+      totCount: 0,
+      acCount: 0,
+      uniqueAcCount: 0,
+      failCount: 0,
+      showSubmissionChart: false,
       submissionChartData: {}
     }
   },
   methods: {
     async updateUserSubmissionInfo(handleId, days) {
       const url = `http://localhost:8080/users/${handleId}/submissions/count?days=${days}`;
+      this.$data.showSubmissionChart = false;
       const res = await axios.get(url).then(response => {
         return response.data;
       });
@@ -35,22 +45,33 @@ export default {
       this.$data.dayCounts = days;
       const labels = [];
       const datasets = [];
-      this.$data.solveCountByDate = res.countAra.map((count, idx) => {
-        const d = new Date();
-        d.setDate(d.getDate() - idx);
-        const date = d.toDateString()
-        return {
-          count, date
-        }
-      });
 
-      const dataset = {label: 'Total submission', backgroundColor: '#79bdf8', data: []};
-      this.$data.solveCountByDate.forEach(data => {
+      const acCounts = {label: 'AC count', backgroundColor: '#0aa804', data: []};
+      const uniqueAcCounts = {label: 'Unique AC count', backgroundColor: '#081c01', data: []};
+      const failCounts = {label: 'Fail count', backgroundColor: '#cd040a', data: []};
+
+      res.countAra.forEach(data => {
         labels.push(data.date);
-        dataset.data.push(data.count);
+        acCounts.data.push(data.acCount);
+        uniqueAcCounts.data.push(data.uniqueAcCount);
+        failCounts.data.push(data.waCount + data.tleCount + data.mleCount);
       });
-      datasets.push(dataset);
+      datasets.push(acCounts);
+      datasets.push(uniqueAcCounts);
+      datasets.push(failCounts);
+
       this.$data.submissionChartData = {labels, datasets};
+      this.$data.showSubmissionChart = true;
+      this.$data.acCount = acCounts.data.reduce((res, count) => {
+        return res + count;
+      }, 0);
+      this.$data.uniqueAcCount = acCounts.data.reduce((res, count) => {
+        return res + count;
+      }, 0);
+      this.$data.failCount = acCounts.data.reduce((res, count) => {
+        return res + count;
+      }, 0);
+      this.$data.totCount = this.acCount + this.uniqueAcCount + this.failCount;
     }
   }
 }
