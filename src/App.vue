@@ -9,10 +9,10 @@
 </template>
 
 <script>
-import axios from "axios";
 import UserInfoForm from "./components/UserInfoForm";
 import SubmissionChart from "./components/SubmissionChart";
 import UserSubmission from "@/components/UserSubmission";
+import userSubmissionService from "./service/user-submission-service";
 
 export default {
   name: 'App',
@@ -33,34 +33,14 @@ export default {
   },
   methods: {
     async updateUserSubmissionInfo(handleId, days) {
-      const url = `http://localhost:8080/users/${handleId}/submissions/count?days=${days}`;
       this.$data.showSubmissionChart = false;
-      const res = await axios.get(url).then(response => {
-        return response.data;
-      });
-
+      const {chartData, acCount, totalSubmissionCount} = await userSubmissionService.getSubmissionData(handleId, days);
       this.$data.cfHandle = handleId;
       this.$data.dayCounts = days;
-      const labels = [];
-      const datasets = [];
-
-      const acCounts = {label: 'AC count', backgroundColor: '#0aa804', data: []};
-      const submissionCounts = {label: 'Submission count', backgroundColor: '#081c01', data: []};
-
-      res.countAra.forEach(data => {
-        labels.push(data.date);
-        acCounts.data.push(data.uniqueAcCount);
-        submissionCounts.data.push(data.totalSubmission);
-      });
-      datasets.push(acCounts);
-      datasets.push(submissionCounts);
-
-      this.$data.submissionChartData = {labels, datasets};
+      this.$data.submissionChartData = chartData;
+      this.$data.acCount = acCount;
+      this.$data.totCount = totalSubmissionCount;
       this.$data.showSubmissionChart = true;
-      this.$data.acCount = acCounts.data.reduce((res, count) => {
-        return res + count;
-      }, 0);
-      this.$data.totCount = res.totalSubmissionCount;
     }
   }
 }
