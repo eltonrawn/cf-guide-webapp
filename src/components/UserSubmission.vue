@@ -1,10 +1,9 @@
 <template>
   <div>
-    <h3 v-if="user !== ''">
-      {{ user }} submitted {{ count }} times in last {{ days }} days. {{acCount}} of them were accepted.<br/>
-      {{uniqueAcCount}} problems were solved by him for the first time.<br/>
-    </h3>
-
+    <h5 v-if="user !== ''">
+      Total Ac: {{acCount}}.<br/>
+      Total Submission: {{count}}<br/>
+    </h5>
   </div>
 </template>
 
@@ -12,7 +11,7 @@
 
 export default {
   name: 'UserSubmission',
-  props: ['user', 'days', 'count', 'acCount', 'uniqueAcCount'],
+  props: ['user', 'days', 'count', 'acCount'],
   data() {
     return {
     }

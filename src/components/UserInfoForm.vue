@@ -21,8 +21,6 @@ export default {
   },
   methods: {
     onSubmit() {
-      alert(this.days);
-      alert(this.handleId);
       this.$emit('form-updated', this.handleId, this.days);
     }
   }

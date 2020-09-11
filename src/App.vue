@@ -3,7 +3,7 @@
     <div class="jumbotron">
       <UserInfoForm @form-updated="updateUserSubmissionInfo"/>
     </div>
-    <UserSubmission :user="cfHandle" :days="dayCounts" :count="totCount" :acCount="acCount" :uniqueAcCount="uniqueAcCount"/>
+    <UserSubmission :user="cfHandle" :days="dayCounts" :count="totCount" :acCount="acCount"/>
     <SubmissionChart v-if="showSubmissionChart" :chart-data="submissionChartData"/>
   </div>
 </template>
@@ -27,8 +27,6 @@ export default {
       dayCounts: 0,
       totCount: 0,
       acCount: 0,
-      uniqueAcCount: 0,
-      failCount: 0,
       showSubmissionChart: false,
       submissionChartData: {}
     }
@@ -47,31 +45,22 @@ export default {
       const datasets = [];
 
       const acCounts = {label: 'AC count', backgroundColor: '#0aa804', data: []};
-      const uniqueAcCounts = {label: 'Unique AC count', backgroundColor: '#081c01', data: []};
-      const failCounts = {label: 'Fail count', backgroundColor: '#cd040a', data: []};
+      const submissionCounts = {label: 'Submission count', backgroundColor: '#081c01', data: []};
 
       res.countAra.forEach(data => {
         labels.push(data.date);
-        acCounts.data.push(data.acCount);
-        uniqueAcCounts.data.push(data.uniqueAcCount);
-        failCounts.data.push(data.waCount + data.tleCount + data.mleCount);
+        acCounts.data.push(data.uniqueAcCount);
+        submissionCounts.data.push(data.totalSubmission);
       });
       datasets.push(acCounts);
-      datasets.push(uniqueAcCounts);
-      datasets.push(failCounts);
+      datasets.push(submissionCounts);
 
       this.$data.submissionChartData = {labels, datasets};
       this.$data.showSubmissionChart = true;
       this.$data.acCount = acCounts.data.reduce((res, count) => {
         return res + count;
       }, 0);
-      this.$data.uniqueAcCount = acCounts.data.reduce((res, count) => {
-        return res + count;
-      }, 0);
-      this.$data.failCount = acCounts.data.reduce((res, count) => {
-        return res + count;
-      }, 0);
-      this.$data.totCount = this.acCount + this.uniqueAcCount + this.failCount;
+      this.$data.totCount = res.totalSubmissionCount;
     }
   }
 }
