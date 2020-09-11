@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h5 v-if="user !== ''">
+    <h5>
       Total Ac: {{acCount}}.<br/>
       Total Submission: {{count}}<br/>
     </h5>

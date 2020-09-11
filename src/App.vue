@@ -3,7 +3,7 @@
     <div class="jumbotron">
       <UserInfoForm @form-updated="updateUserSubmissionInfo"/>
     </div>
-    <UserSubmission :user="cfHandle" :days="dayCounts" :count="totCount" :acCount="acCount"/>
+    <UserSubmission v-if="showSubmissionChart" :user="cfHandle" :days="dayCounts" :count="totCount" :acCount="acCount"/>
     <SubmissionChart v-if="showSubmissionChart" :chart-data="submissionChartData"/>
   </div>
 </template>
