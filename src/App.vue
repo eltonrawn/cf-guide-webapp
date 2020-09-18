@@ -7,10 +7,10 @@
 
     <div class="container">
       <div class="row">
-        <div class="col-sm">
+        <div class="col-sm-3">
           <SolveByTypePieChart v-if="showSubmissionChart" :chartData="solveByTypePieCharData"/>
         </div>
-        <div class="col-sm">
+        <div class="col-sm-9">
           <SubmissionChart v-if="showSubmissionChart" :chart-data="submissionChartData"/>
         </div>
       </div>
