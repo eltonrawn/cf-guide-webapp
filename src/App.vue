@@ -4,7 +4,17 @@
       <UserInfoForm @form-updated="updateUserSubmissionInfo"/>
     </div>
     <UserSubmission v-if="showSubmissionChart" :user="cfHandle" :days="dayCounts" :count="totCount" :acCount="acCount"/>
-    <SubmissionChart v-if="showSubmissionChart" :chart-data="submissionChartData"/>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm">
+          <SolveByTypePieChart v-if="showSubmissionChart" :chartData="solveByTypePieCharData"/>
+        </div>
+        <div class="col-sm">
+          <SubmissionChart v-if="showSubmissionChart" :chart-data="submissionChartData"/>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -13,10 +23,12 @@ import UserInfoForm from "./components/UserInfoForm";
 import SubmissionChart from "./components/SubmissionChart";
 import UserSubmission from "@/components/UserSubmission";
 import userSubmissionService from "./service/user-submission-service";
+import SolveByTypePieChart from "@/components/SolveByTypePieChart";
 
 export default {
   name: 'App',
   components: {
+    SolveByTypePieChart,
     UserSubmission,
     SubmissionChart,
     UserInfoForm
@@ -28,19 +40,21 @@ export default {
       totCount: 0,
       acCount: 0,
       showSubmissionChart: false,
-      submissionChartData: {}
+      submissionChartData: {},
+      solveByTypePieCharData: {}
     }
   },
   methods: {
     async updateUserSubmissionInfo(handleId, days) {
-      this.$data.showSubmissionChart = false;
-      const {chartData, acCount, totalSubmissionCount} = await userSubmissionService.getSubmissionData(handleId, days);
-      this.$data.cfHandle = handleId;
-      this.$data.dayCounts = days;
-      this.$data.submissionChartData = chartData;
-      this.$data.acCount = acCount;
-      this.$data.totCount = totalSubmissionCount;
-      this.$data.showSubmissionChart = true;
+      this.showSubmissionChart = false;
+      const {pieChartData, lineChartData, acCount, totalSubmissionCount} = await userSubmissionService.getSubmissionData(handleId, days);
+      this.cfHandle = handleId;
+      this.dayCounts = days;
+      this.submissionChartData = lineChartData;
+      this.acCount = acCount;
+      this.totCount = totalSubmissionCount;
+      this.solveByTypePieCharData = pieChartData;
+      this.showSubmissionChart = true;
     }
   }
 }
