@@ -26,17 +26,18 @@ class UserSubmissionService {
     return {labels, datasets};
   }
 
-  makePieCharData({solveCountByType}) {
+  makeSolveTypeByChartData({solveCountByType}) {
     const pieChartData = {
       labels: [],
       datasets: [{
+        label: 'Solve count by type',
         borderWidth: 1,
         backgroundColor: [],
         data: []
       }]
     };
 
-    Object.keys(solveCountByType).forEach(key => {
+    Object.keys(solveCountByType).sort().forEach(key => {
       pieChartData.labels.push(key);
       pieChartData.datasets[0].backgroundColor.push(util.dynamicColors());
       pieChartData.datasets[0].data.push(solveCountByType[key]);
@@ -52,13 +53,13 @@ class UserSubmissionService {
     });
     const lineChartData = this.makeLineCharData(res);
     const acCount = this.totalAcCount(res);
-    const pieChartData = this.makePieCharData(res);
+    const solveByTypeChartData = this.makeSolveTypeByChartData(res);
 
     return {
       lineChartData,
       totalSubmissionCount: res.totalSubmissionCount,
       acCount,
-      pieChartData
+      solveByTypeChartData
     };
   }
 }

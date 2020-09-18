@@ -8,7 +8,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-3">
-          <SolveByTypePieChart v-if="showSubmissionChart" :chartData="solveByTypePieCharData"/>
+          <SubmissionChart v-if="showSubmissionChart" :chartData="solveByTypeCharData"/>
         </div>
         <div class="col-sm-9">
           <SubmissionChart v-if="showSubmissionChart" :chart-data="submissionChartData"/>
@@ -23,12 +23,10 @@ import UserInfoForm from "./components/UserInfoForm";
 import SubmissionChart from "./components/SubmissionChart";
 import UserSubmission from "@/components/UserSubmission";
 import userSubmissionService from "./service/user-submission-service";
-import SolveByTypePieChart from "@/components/SolveByTypePieChart";
 
 export default {
   name: 'App',
   components: {
-    SolveByTypePieChart,
     UserSubmission,
     SubmissionChart,
     UserInfoForm
@@ -41,19 +39,19 @@ export default {
       acCount: 0,
       showSubmissionChart: false,
       submissionChartData: {},
-      solveByTypePieCharData: {}
+      solveByTypeCharData: {}
     }
   },
   methods: {
     async updateUserSubmissionInfo(handleId, days) {
       this.showSubmissionChart = false;
-      const {pieChartData, lineChartData, acCount, totalSubmissionCount} = await userSubmissionService.getSubmissionData(handleId, days);
+      const {solveByTypeChartData, lineChartData, acCount, totalSubmissionCount} = await userSubmissionService.getSubmissionData(handleId, days);
       this.cfHandle = handleId;
       this.dayCounts = days;
       this.submissionChartData = lineChartData;
       this.acCount = acCount;
       this.totCount = totalSubmissionCount;
-      this.solveByTypePieCharData = pieChartData;
+      this.solveByTypeCharData = solveByTypeChartData;
       this.showSubmissionChart = true;
     }
   }

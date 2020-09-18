@@ -8,6 +8,24 @@ export default {
   mixins: [reactiveProp],
   data: () => ({
     options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          },
+          gridLines: {
+            display: true
+          }
+        }],
+        xAxes: [{
+          gridLines: {
+            display: true
+          }
+        }]
+      },
+      legend: {
+        display: true
+      },
       responsive: true,
       maintainAspectRatio: false
     }
