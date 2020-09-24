@@ -1,5 +1,4 @@
 import axios from 'axios';
-import util from "@/util";
 
 class UserSubmissionService {
   constructor() {
@@ -12,7 +11,7 @@ class UserSubmissionService {
   makeLineCharData(res) {
     const labels = [];
     const datasets = [];
-    const acCounts = {label: 'AC count', backgroundColor: '#0aa804', data: []};
+    const acCounts = {label: 'AC count', backgroundColor: '#06630b', data: []};
     const submissionCounts = {label: 'Submission count', backgroundColor: '#081c01', data: []};
 
     res.countAra.forEach(data => {
@@ -39,7 +38,7 @@ class UserSubmissionService {
 
     Object.keys(solveCountByType).sort().forEach(key => {
       pieChartData.labels.push(key);
-      pieChartData.datasets[0].backgroundColor.push(util.dynamicColors());
+      pieChartData.datasets[0].backgroundColor.push('#42586d');
       pieChartData.datasets[0].data.push(solveCountByType[key]);
     });
 
