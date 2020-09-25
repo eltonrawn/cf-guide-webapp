@@ -46,7 +46,8 @@ class UserSubmissionService {
   }
 
   async getSubmissionData(handleId, days) {
-    const url = `http://localhost:8080/users/${handleId}/submissions/count?days=${days}`;
+    let back_end = process.env.VUE_APP_BACK_END || 'http://localhost:8080'
+    const url = `${back_end}/users/${handleId}/submissions/count?days=${days}`;
     const res = await axios.get(url).then(response => {
       return response.data;
     });

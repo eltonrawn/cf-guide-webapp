@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve --port 3030",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "prod": "npm install && npm run build && serve -s dist -l 3030"
   },
   "dependencies": {
     "axios": "^0.20.0",
